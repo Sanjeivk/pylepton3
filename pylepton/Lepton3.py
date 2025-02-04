@@ -6,7 +6,7 @@ import struct
 import time
 import RPi.GPIO as GPIO  # Added GPIO import
 
-from ioctl_numbers import _IOR, _IOW
+from .ioctl_numbers import _IOR, _IOW
 from fcntl import ioctl
 
 from .Lepton import Lepton
@@ -90,6 +90,7 @@ class Lepton3(Lepton):
             if (
                 self._capture_buf[20, 0] & 0xFF0F
             ) != 0x1400:  # make sure that this is a well-formed frame, should find line 20 here
+                print(f"VSYNC counter incremented: {self._vsync_counter}")
                 print("Garbage frame number resetting...")
                 time.sleep(0.185)
             start = time.time()
@@ -130,7 +131,7 @@ class Lepton3(Lepton):
                     )
                 )
             print("---")
-
+        print(f"VSYNC counter incremented: {self._vsync_counter}")
         print("frame processed in {0}s, {1}hz".format(end - start, 1.0 / (end - start)))
 
         data_buffer.shape = (240, 80)
